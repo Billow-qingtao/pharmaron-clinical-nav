@@ -1,0 +1,18 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temp files
+*.tmp
+*.bak
+convert_html.py
+create_repo.py
+enable_pages.py
