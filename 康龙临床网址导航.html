@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="viggo">
+<meta name="keywords" content="康龙临床网址导航">
+<meta name="description" content="康龙临床业务系统导航">
+<link rel="shortcut icon" href="https://navi.pharmaronclinical.com/assets/images/favicon.ico">
+<title>康龙临床网址导航 | Pharmaron Clinical</title>
+<style>
+/* ============================================================
+   AI + Medical Tech Design System
+   ============================================================ */
+:root {
+  /* Brand palette */
+  --c-bg-deep:   #060B18;
+  --c-bg:        #0A0F1F;
+  --c-surface:   rgba(15, 23, 42, 0.55);
+  --c-surface-2: rgba(30, 41, 59, 0.45);
+  --c-border:    rgba(56, 189, 248, 0.12);
+  --c-border-hover: rgba(56, 189, 248, 0.35);
+
+  /* Accents */
+  --c-cyan:    #22D3EE;
+  --c-blue:    #3B82F6;
+  --c-violet:  #8B5CF6;
+  --c-teal:    #14B8A6;
+  --c-emerald: #10B981;
+  --c-glow:    rgba(34, 211, 238, 0.15);
+
+  /* Text */
+  --c-text:       #E2E8F0;
+  --c-text-muted: #64748B;
+  --c-text-dim:   #475569;
+
+  /* Gradients */
+  --grad-primary: linear-gradient(135deg, #22D3EE 0%, #3B82F6 50%, #8B5CF6 100%);
+  --grad-card:    linear-gradient(145deg, rgba(34,211,238,0.06) 0%, rgba(139,92,246,0.06) 100%);
+  --grad-sidebar: linear-gradient(180deg, rgba(10,15,31,0.95) 0%, rgba(6,11,24,0.98) 100%);
+
+  /* Layout */
+  --sidebar-w: 220px;
+  --header-h: 56px;
+  --radius: 12px;
+  --radius-sm: 8px;
+
+  /* Shadows */
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.25);
+  --shadow-glow: 0 0 24px rgba(34,211,238,0.18);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--c-bg-deep);
+  color: var(--c-text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ---- Animated background ---- */
+.bg-canvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.bg-blob {
+  position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35;
+  animation: float 18s ease-in-out infinite;
+}
+.bg-blob.b1 { width: 520px; height: 520px; background: radial-gradient(circle, #0EA5E9 0%, transparent 70%); top: -120px; left: -80px; }
+.bg-blob.b2 { width: 460px; height: 460px; background: radial-gradient(circle, #8B5CF6 0%, transparent 70%); bottom: -100px; right: -60px; animation-delay: -6s; }
+.bg-blob.b3 { width: 380px; height: 380px; background: radial-gradient(circle, #14B8A6 0%, transparent 70%); top: 40%; left: 30%; animation-delay: -12s; }
+
+@keyframes float {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%     { transform: translate(40px,-30px) scale(1.05); }
+  66%     { transform: translate(-30px,20px) scale(0.95); }
+}
+
+/* Grid overlay */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(56,189,248,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 80%);
+}
+
+/* ============================================================
+   Layout
+   ============================================================ */
+.app { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+/* ---- Sidebar ---- */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--grad-sidebar);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid var(--c-border);
+  position: fixed; top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  display: flex; flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.sidebar-brand {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--c-border);
+  display: flex; align-items: center; gap: 8px;
+}
+.sidebar-brand .logo-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--grad-primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #fff; font-weight: 700;
+  box-shadow: 0 0 16px rgba(34,211,238,0.4);
+}
+.sidebar-brand .brand-text {
+  font-size: 14px; font-weight: 700;
+  background: var(--grad-primary);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.sidebar-brand .brand-sub { font-size: 9px; color: var(--c-text-muted); letter-spacing: 1px; }
+
+.nav-menu { flex: 1; overflow-y: auto; padding: 8px 8px; list-style: none; }
+.nav-menu::-webkit-scrollbar { width: 4px; }
+.nav-menu::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.2); border-radius: 4px; }
+
+.nav-section-label {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--c-text-dim); padding: 12px 10px 4px; font-weight: 600;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: var(--radius-sm);
+  color: var(--c-text-muted); font-size: 12.5px; font-weight: 500;
+  cursor: pointer; transition: all 0.2s;
+  text-decoration: none; position: relative;
+}
+.nav-item .nav-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+.nav-item:hover {
+  color: var(--c-text); background: var(--c-surface-2);
+}
+.nav-item.active {
+  color: #fff;
+  background: linear-gradient(90deg, rgba(34,211,238,0.12) 0%, rgba(59,130,246,0.06) 100%);
+}
+.nav-item.active::before {
+  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 20px; border-radius: 3px;
+  background: var(--grad-primary);
+  box-shadow: 0 0 8px var(--c-cyan);
+}
+.nav-item .nav-badge {
+  margin-left: auto; font-size: 10px; color: var(--c-text-dim);
+  background: rgba(56,189,248,0.08); padding: 1px 6px; border-radius: 6px;
+}
+
+/* Submenu */
+.nav-sub { list-style: none; max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+.nav-sub.open { max-height: 500px; }
+.nav-sub .nav-item { padding-left: 32px; font-size: 11.5px; }
+.nav-arrow { margin-left: auto; font-size: 10px; transition: transform 0.2s; color: var(--c-text-dim); }
+.nav-arrow.open { transform: rotate(90deg); }
+
+/* ---- Main ---- */
+.main {
+  flex: 1; margin-left: var(--sidebar-w);
+  display: flex; flex-direction: column;
+  height: 100vh; overflow: hidden;
+}
+
+/* Header */
+.header {
+  height: var(--header-h);
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 20px;
+  background: rgba(10,15,31,0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--c-border);
+  position: sticky; top: 0; z-index: 50;
+}
+.header-toggle {
+  display: none; background: none; border: none; color: var(--c-text-muted);
+  font-size: 20px; cursor: pointer;
+}
+.header-title { font-size: 14px; font-weight: 600; color: var(--c-text); white-space: nowrap; }
+
+.search-box {
+  flex: 1; max-width: 360px; margin-left: auto; position: relative;
+}
+.search-box input {
+  width: 100%; padding: 7px 14px 7px 34px;
+  background: var(--c-surface-2); border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm); color: var(--c-text);
+  font-size: 12px; outline: none; transition: all 0.2s;
+}
+.search-box input::placeholder { color: var(--c-text-dim); }
+.search-box input:focus {
+  border-color: rgba(34,211,238,0.4);
+  box-shadow: 0 0 0 3px rgba(34,211,238,0.08);
+}
+.search-box .search-icon {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--c-text-dim); font-size: 13px;
+}
+
+.header-right { display: flex; align-items: center; gap: 10px; }
+.lang-switch {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 7px;
+  background: var(--c-surface-2); border: 1px solid var(--c-border);
+  color: var(--c-text-muted); font-size: 11px; cursor: pointer; transition: 0.2s;
+}
+.lang-switch:hover { color: var(--c-text); border-color: var(--c-border-hover); }
+.pulse-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--c-emerald);
+  box-shadow: 0 0 8px var(--c-emerald);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%     { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* Content */
+.content { flex: 1; padding: 20px; overflow-y: auto; }
+.content::-webkit-scrollbar { width: 5px; }
+.content::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.15); border-radius: 4px; }
+.content::-webkit-scrollbar-track { background: transparent; }
+
+/* Section — hidden unless active */
+.section { display: none; }
+.section.active { display: block; }
+.section-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 14px; scroll-margin-top: 70px;
+}
+.section-icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--grad-primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; box-shadow: 0 0 12px rgba(34,211,238,0.2);
+  flex-shrink: 0;
+}
+.section-title {
+  font-size: 16px; font-weight: 700;
+  background: var(--grad-primary);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.section-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--c-border-hover), transparent); }
+
+/* Sub-section — hidden unless active */
+.subsection { display: none; margin-bottom: 20px; }
+.subsection.active { display: block; }
+.subsection-header {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 10px; margin-top: 6px;
+}
+.subsection-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--c-cyan); box-shadow: 0 0 6px var(--c-cyan); }
+.subsection-title { font-size: 13px; font-weight: 600; color: var(--c-text-muted); }
+
+/* ---- Card Grid ---- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+/* Card */
+.card {
+  background: var(--c-surface);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 14px 14px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.card::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--grad-card);
+  opacity: 0; transition: opacity 0.3s;
+  pointer-events: none;
+}
+.card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--grad-primary);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s;
+}
+.card:hover {
+  border-color: var(--c-border-hover);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-3px);
+}
+.card:hover::before { opacity: 1; }
+.card:hover::after { transform: scaleX(1); }
+
+.card-top { display: flex; align-items: center; gap: 10px; }
+.card-logo {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0; transition: 0.3s;
+}
+.card:hover .card-logo {
+  border-color: var(--c-border-hover);
+  box-shadow: 0 0 12px rgba(34,211,238,0.15);
+}
+.card-logo img { width: 24px; height: 24px; border-radius: 5px; object-fit: cover; }
+.card-logo .card-icon {
+  font-size: 18px;
+  background: var(--grad-primary);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.card-name { font-size: 13px; font-weight: 600; color: var(--c-text); line-height: 1.3; }
+.card-desc { font-size: 11px; color: var(--c-text-muted); line-height: 1.45; flex: 1; }
+.card-tag {
+  display: inline-block; font-size: 9px; padding: 2px 7px;
+  border-radius: 5px; background: rgba(34,211,238,0.08);
+  color: var(--c-cyan); border: 1px solid rgba(34,211,238,0.15);
+  align-self: flex-start;
+}
+.card-tag.warn { background: rgba(251,191,36,0.08); color: #FBBF24; border-color: rgba(251,191,36,0.15); }
+
+/* Hidden by search */
+.card.hidden { display: none; }
+.section.hidden, .subsection.hidden { display: none; }
+
+/* No results */
+.no-results {
+  display: none; text-align: center; padding: 60px 20px;
+  color: var(--c-text-muted); font-size: 14px;
+}
+.no-results.show { display: block; }
+.no-results .nr-icon { font-size: 42px; margin-bottom: 12px; opacity: 0.3; }
+
+/* ---- Footer ---- */
+.footer {
+  padding: 18px 20px; text-align: center;
+  border-top: 1px solid var(--c-border);
+  font-size: 11px; color: var(--c-text-dim);
+}
+.footer a { color: var(--c-cyan); text-decoration: none; }
+
+/* Back to top */
+.back-top {
+  position: fixed; bottom: 20px; right: 20px;
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--grad-primary);
+  border: none; cursor: pointer; color: #fff; font-size: 18px;
+  box-shadow: 0 4px 16px rgba(34,211,238,0.3);
+  opacity: 0; transform: translateY(20px); transition: 0.3s;
+  z-index: 90; display: flex; align-items: center; justify-content: center;
+}
+.back-top.show { opacity: 1; transform: translateY(0); }
+.back-top:hover { box-shadow: 0 6px 24px rgba(34,211,238,0.45); }
+
+/* Scroll progress */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 2px; width: 0%;
+  background: var(--grad-primary); z-index: 200; transition: width 0.1s;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar { transform: translateX(-100%); width: 220px; }
+  .sidebar.show { transform: translateX(0); }
+  .header-toggle { display: block; }
+  .content { padding: 14px; }
+  .card-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .search-box { max-width: none; }
+  .header-title { display: none; }
+}
+
+/* Overlay for mobile sidebar */
+.sidebar-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 99; backdrop-filter: blur(2px);
+}
+.sidebar-overlay.show { display: block; }
+</style>
+</head>
+<body>
+
+<!-- Animated Background -->
+<div class="bg-canvas">
+  <div class="bg-blob b1"></div>
+  <div class="bg-blob b2"></div>
+  <div class="bg-blob b3"></div>
+</div>
+<div class="bg-grid"></div>
+
+<!-- Scroll Progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<div class="app">
+
+  <!-- ============ Sidebar ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-icon">P+</div>
+      <div>
+        <div class="brand-text">康龙临床导航</div>
+        <div class="brand-sub">PHARMARON · CD</div>
+      </div>
+    </div>
+    <ul class="nav-menu" id="mainMenu">
+
+      <li><a class="nav-item active" data-target="常用推荐" data-type="section"><span class="nav-icon">★</span>常用推荐<span class="nav-badge">9</span></a></li>
+      <li>
+        <a class="nav-item nav-parent" data-target="业务系统" data-type="section" data-toggle="sub-1">
+          <span class="nav-icon">⚙</span>业务系统
+          <span class="nav-arrow open">▶</span>
+        </a>
+        <ul class="nav-sub open" id="sub-1">
+          <li><a class="nav-item" data-target="SaaS系统" data-type="subsection"><span class="nav-icon">·</span>SaaS系统<span class="nav-badge">3</span></a></li>
+        </ul>
+      </li>
+      <li>
+        <a class="nav-item nav-parent" data-target="常用网站" data-type="section" data-toggle="sub-2">
+          <span class="nav-icon">◇</span>常用网站
+          <span class="nav-arrow open">▶</span>
+        </a>
+        <ul class="nav-sub open" id="sub-2">
+          <li><a class="nav-item" data-target="监管机构" data-type="subsection"><span class="nav-icon">·</span>监管机构<span class="nav-badge">4</span></a></li>
+          <li><a class="nav-item" data-target="在线工具" data-type="subsection"><span class="nav-icon">·</span>在线工具<span class="nav-badge">4</span></a></li>
+          <li><a class="nav-item" data-target="信息查询" data-type="subsection"><span class="nav-icon">·</span>信息查询<span class="nav-badge">6</span></a></li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ============ Main ============ -->
+  <div class="main">
+
+    <!-- Header -->
+    <header class="header">
+      <button class="header-toggle" id="menuToggle">☰</button>
+      <span class="header-title">康龙临床业务系统导航</span>
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="searchInput" placeholder="搜索系统名称或关键词…" autocomplete="off">
+      </div>
+      <div class="header-right">
+        <div class="lang-switch" onclick="window.open('https://navi.pharmaronclinical.com/en/index.html','_blank')">
+          <span class="pulse-dot"></span> EN
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content" id="content">
+
+      <!-- ========== 常用推荐 ========== -->
+      <div class="section" id="常用推荐">
+        <div class="section-header">
+          <div class="section-icon">★</div>
+          <div class="section-title">常用推荐</div>
+          <div class="section-line"></div>
+        </div>
+        <div class="card-grid">
+          <div class="card" onclick="window.open('https://elearning.pharmaronclinical.com/','_blank')">
+            <div class="card-top">
+              <div class="card-logo"><img src="./康龙临床网址导航_files/behance.png" alt=""></div>
+              <div class="card-name">康龙临床大学</div>
+            </div>
+            <div class="card-desc">（默认开通）临床工号Cxxxxx / 临床邮箱密码</div>
+            <span class="card-tag">联系：张晓倩、冯嘉莉</span>
+          </div>
+          <div class="card" onclick="window.open('http://10.2.0.146/01%20CRO/Forms/AllItems.aspx?web=1','_blank')">
+            <div class="card-top">
+              <div class="card-logo"><img src="./康龙临床网址导航_files/uicn.png" alt=""></div>
+              <div class="card-name">SharePoint</div>
+            </div>
+            <div class="card-desc">（VPN访问）临床工号Cxxxxx / 临床邮箱密码</div>
+            <span class="card-tag">联系：吴琛、李国刚</span>
+          </div>
+          <div class="card" onclick="window.open('https://owa.pharmaron-bj.com/owa/','_blank')">
+            <div class="card-top">
+              <div class="card-logo"><img src="./康龙临床网址导航_files/mail.png" alt=""></div>
+              <div class="card-name">康龙临床邮箱Web版</div>
+            </div>
+            <div class="card-desc">康龙临床邮箱Web端，每3个月可在此修改密码</div>
+            <span class="card-tag">提IT工单申请</span>
+          </div>
+          <div class="card" onclick="window.open('https://esign-pro.pharmaronclinical.com/','_blank')">
+            <div class="card-top">
+              <div class="card-logo"><img src="./康龙临床网址导航_files/Iconfinder.png" alt=""></div>
+              <div class="card-name">E慧签e-Sign</div>
+            </div>
+            <div class="card-desc">（需申请）临床邮箱 / 临床邮箱密码</div>
+            <span class="card-tag">联系：吴琛、李国刚</span>
+          </div>
+          <div class="card" onclick="window.open('https://send.pharmaronclinical.com/','_blank')">
+            <div class="card-top">
+              <div class="card-logo"><img src="./康龙临床网址导航_files/Iconfinder.png" alt=""></div>
+              <div class="card-name">大文件外发</div>
+            </div>
+            <div class="card-desc">（需申请）大文件安全外发平台</div>
+            <span class="card-tag">联系：吴琛、李国刚</span>
+          </div>
+          <div class="card" onclick="window.open('https://www.hcbuy.com','_blank')">
+            <div class="card-top">
+              <div class="card-logo"><img src="./康龙临床网址导航_files/Iconfinder.png" alt=""></div>
+              <div class="card-name">海创恒源采购平台</div>
+            </div>
+            <div class="card-desc">（需申请）临床试验项目物资采购平台</div>
+            <span class="card-tag">联系：冯嘉莉</span>
+          </div>
+          <div class="card" onclick="window.open('https://clinical.eclincloud.com/mds/#/login','_blank')">
+            <div class="card-top">
+              <div class="card-logo"><img src="./康龙临床网址导航_files/yilin.png" alt=""></div>
+              <div class="card-name">一临云（ECC System）</div>
+            </div>
+            <div class="card-desc">（需申请）Eclincloud 临床试验一体化云平台</div>
+            <span class="card-tag">联系：李青涛&子系统管理员</span>
+          </div>
+          <div class="card" onclick="window.open('https://pharmaron-cd.cn5.quickconnect.cn/','_blank')">
+            <div class="card-top">
+              <div class="card-logo"><img src="./康龙临床网址导航_files/Iconfinder.png" alt=""></div>
+              <div class="card-name">群晖 NAS平台</div>
+            </div>
+            <div class="card-desc">（需申请）部门内部文件存储共享平台</div>
+            <span class="card-tag">联系：李青涛</span>
+          </div>
+          <div class="card" onclick="window.open('https://bizagent-uat.pharmaronclinical.com/login','_blank')">
+            <div class="card-top">
+              <div class="card-logo"><img src="./康龙临床网址导航_files/Iconfinder.png" alt=""></div>
+              <div class="card-name">业务Agent平台-UAT</div>
+            </div>
+            <div class="card-desc">（需申请）临床邮箱 / 临时密码</div>
+            <span class="card-tag">联系：李青涛、朱思婕</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== 业务系统 ========== -->
+      <div class="section" id="业务系统">
+        <div class="section-header">
+          <div class="section-icon">⚙</div>
+          <div class="section-title">业务系统</div>
+          <div class="section-line"></div>
+        </div>
+
+        <!-- SaaS系统 -->
+        <div class="subsection" id="SaaS系统">
+          <div class="subsection-header">
+            <div class="subsection-dot"></div>
+            <div class="subsection-title">SaaS系统</div>
+          </div>
+          <div class="card-grid">
+            <div class="card" onclick="window.open('https://clinical.eclincloud.com/mds/#/login','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><img src="./康龙临床网址导航_files/yilin.png" alt=""></div>
+                <div class="card-name">一临云（ECC System）</div>
+              </div>
+              <div class="card-desc">（需申请）Eclincloud 临床试验一体化云平台</div>
+              <span class="card-tag">SaaS</span>
+            </div>
+            <div class="card" onclick="window.open('https://login.imedidata.com/login','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><img src="./康龙临床网址导航_files/medi.png" alt=""></div>
+                <div class="card-name">MEDIDATA</div>
+              </div>
+              <div class="card-desc">Medidata Clinical Cloud 临床研究平台</div>
+              <span class="card-tag">SaaS</span>
+            </div>
+            <div class="card" onclick="window.open('https://www.trialos.com.cn/login/','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><img src="./康龙临床网址导航_files/trial.png" alt=""></div>
+                <div class="card-name">TrialOS药试圈</div>
+              </div>
+              <div class="card-desc">太美医疗临床试验平台</div>
+              <span class="card-tag">SaaS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== 常用网站 ========== -->
+      <div class="section" id="常用网站">
+        <div class="section-header">
+          <div class="section-icon">◇</div>
+          <div class="section-title">常用网站</div>
+          <div class="section-line"></div>
+        </div>
+
+        <!-- 监管机构 -->
+        <div class="subsection" id="监管机构">
+          <div class="subsection-header">
+            <div class="subsection-dot"></div>
+            <div class="subsection-title">监管机构</div>
+          </div>
+          <div class="card-grid">
+            <div class="card" onclick="window.open('http://www.cde.org.cn/','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><img src="./康龙临床网址导航_files/cde.png" alt=""></div>
+                <div class="card-name">CDE</div>
+              </div>
+              <div class="card-desc">国家药品监督管理局药品评审中心</div>
+              <span class="card-tag">监管·中国</span>
+            </div>
+            <div class="card" onclick="window.open('https://www.fda.gov/','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><img src="./康龙临床网址导航_files/fda.png" alt=""></div>
+                <div class="card-name">FDA</div>
+              </div>
+              <div class="card-desc">U.S. Food & Drug Administration</div>
+              <span class="card-tag">监管·美国</span>
+            </div>
+            <div class="card" onclick="window.open('https://www.ema.europa.eu/en','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><img src="./康龙临床网址导航_files/ema.png" alt=""></div>
+                <div class="card-name">EMA</div>
+              </div>
+              <div class="card-desc">European Medicines Agency</div>
+              <span class="card-tag">监管·欧盟</span>
+            </div>
+            <div class="card" onclick="window.open('https://fuwu.most.gov.cn/','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><img src="./康龙临床网址导航_files/keji.png" alt=""></div>
+                <div class="card-name">科技部</div>
+              </div>
+              <div class="card-desc">科技部政务服务平台</div>
+              <span class="card-tag">监管·政务</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 在线工具 -->
+        <div class="subsection" id="在线工具">
+          <div class="subsection-header">
+            <div class="subsection-dot"></div>
+            <div class="subsection-title">在线工具</div>
+          </div>
+          <div class="card-grid">
+            <div class="card" onclick="window.open('https://ai-bot.cn/','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><span class="card-icon">📖</span></div>
+                <div class="card-name">AI 工具集</div>
+              </div>
+              <div class="card-desc">AI 工具分类合集</div>
+              <span class="card-tag">效率工具</span>
+            </div>
+            <div class="card" onclick="window.open('https://www.aitoollab.cn/','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><span class="card-icon">📖</span></div>
+                <div class="card-name">AI 工具百宝箱</div>
+              </div>
+              <div class="card-desc">AI 工具百宝箱</div>
+              <span class="card-tag">效率工具</span>
+            </div>
+            <div class="card" onclick="window.open('https://www.termonline.cn/index','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><span class="card-icon">📖</span></div>
+                <div class="card-name">术语在线</div>
+              </div>
+              <div class="card-desc">全国科学技术名词审定委员会术语知识服务平台</div>
+              <span class="card-tag">术语</span>
+            </div>
+            <div class="card" onclick="window.open('https://www.lanrenexcel.com/','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><span class="card-icon">📖</span></div>
+                <div class="card-name">懒人Excel</div>
+              </div>
+              <div class="card-desc">Excel函数公式、操作技巧、数据分析、图表模板、VBA教程</div>
+              <span class="card-tag">效率工具</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 信息查询 -->
+        <div class="subsection" id="信息查询">
+          <div class="subsection-header">
+            <div class="subsection-dot"></div>
+            <div class="subsection-title">信息查询</div>
+          </div>
+          <div class="card-grid">
+            <div class="card" onclick="window.open('https://gcp.nidatraining.org/','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><span class="card-icon">🎓</span></div>
+                <div class="card-name">GCP培训信息</div>
+              </div>
+              <div class="card-desc">Good Clinical Practice (GCP) 课程，基于ICH GCP原则</div>
+              <span class="card-tag">培训</span>
+            </div>
+            <div class="card" onclick="window.open('https://beian.cfdi.org.cn/CTMDS/','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><span class="card-icon">🏥</span></div>
+                <div class="card-name">CFDI药物临床机构查询</div>
+              </div>
+              <div class="card-desc">药物临床试验机构备案管理信息平台查询</div>
+              <span class="card-tag">机构查询</span>
+            </div>
+            <div class="card" onclick="window.open('http://www.chinadrugtrials.org.cn/','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><span class="card-icon">📋</span></div>
+                <div class="card-name">国内临床试验登记查询</div>
+              </div>
+              <div class="card-desc">CDE药物临床试验登记和信息公示平台</div>
+              <span class="card-tag">试验登记</span>
+            </div>
+            <div class="card" onclick="window.open('https://www.chictr.org.cn/','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><span class="card-icon">🗂</span></div>
+                <div class="card-name">中国临床ChiCTR</div>
+              </div>
+              <div class="card-desc">中国临床试验注册中心，WHO国际临床试验注册平台一级注册机构</div>
+              <span class="card-tag">注册·中国</span>
+            </div>
+            <div class="card" onclick="window.open('https://www.clinicaltrials.gov/','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><span class="card-icon">🌐</span></div>
+                <div class="card-name">美国临床ClinicalTrials</div>
+              </div>
+              <div class="card-desc">NIH/NLM与FDA运行的临床试验资料库，全球最大临床试验注册库</div>
+              <span class="card-tag">注册·全球</span>
+            </div>
+            <div class="card" onclick="window.open('https://www.cde.org.cn/ectd/index','_blank')">
+              <div class="card-top">
+                <div class="card-logo"><span class="card-icon">📄</span></div>
+                <div class="card-name">eCTD专栏 · CDE</div>
+              </div>
+              <div class="card-desc">药审中心eCTD专栏，含简介、动态、指导原则、业务流程等</div>
+              <span class="card-tag">eCTD</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No results -->
+      <div class="no-results" id="noResults">
+        <div class="nr-icon">⌕</div>
+        <div>未找到匹配的系统，试试其他关键词？</div>
+      </div>
+
+    </div><!-- /content -->
+
+    <!-- Footer -->
+    <footer class="footer">
+      © 2017-2026 Pharmaron Clinical Navigation · design by <a href="https://www.pharmaronclinical.com/" target="_blank">PHC DIT</a>
+    </footer>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- Back to top -->
+<button class="back-top" id="backTop" title="返回顶部">↑</button>
+
+<script>
+(function() {
+  var contentEl = document.getElementById('content');
+  var sections = document.querySelectorAll('.section');
+  var subsections = document.querySelectorAll('.subsection');
+  var navItems = document.querySelectorAll('.nav-item[data-target]');
+  var noResults = document.getElementById('noResults');
+  var searchInput = document.getElementById('searchInput');
+  var cards = document.querySelectorAll('.card');
+  var backTop = document.getElementById('backTop');
+
+  // ---- Navigation: show only the clicked module ----
+  function navigate(target, type) {
+    // Hide everything
+    sections.forEach(function(s) { s.classList.remove('active'); });
+    subsections.forEach(function(sub) { sub.classList.remove('active'); });
+
+    if (type === 'section') {
+      // Show entire section + all its subsections
+      var section = document.getElementById(target);
+      if (section) {
+        section.classList.add('active');
+        section.querySelectorAll('.subsection').forEach(function(sub) {
+          sub.classList.add('active');
+        });
+      }
+    } else {
+      // Show parent section + only this subsection
+      var sub = document.getElementById(target);
+      if (sub) {
+        var section = sub.closest('.section');
+        if (section) section.classList.add('active');
+        sub.classList.add('active');
+      }
+    }
+    contentEl.scrollTop = 0;
+  }
+
+  navItems.forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = this.getAttribute('data-target');
+      var type = this.getAttribute('data-type');
+
+      navigate(target, type);
+
+      // Active state
+      navItems.forEach(function(n) { n.classList.remove('active'); });
+      this.classList.add('active');
+
+      // Ensure parent submenu stays open
+      if (this.classList.contains('nav-parent')) {
+        var toggleId = this.getAttribute('data-toggle');
+        if (toggleId) {
+          var sub = document.getElementById(toggleId);
+          if (sub) sub.classList.add('open');
+          var arrow = this.querySelector('.nav-arrow');
+          if (arrow) arrow.classList.add('open');
+        }
+      }
+
+      // Close mobile sidebar
+      if (window.innerWidth <= 900) {
+        document.getElementById('sidebar').classList.remove('show');
+        document.getElementById('sidebarOverlay').classList.remove('show');
+      }
+
+      // Clear search when switching modules
+      if (searchInput.value) {
+        searchInput.value = '';
+        cards.forEach(function(c) { c.classList.remove('hidden'); });
+        noResults.classList.remove('show');
+      }
+    });
+  });
+
+  // ---- Search filter (within current module) ----
+  searchInput.addEventListener('input', function() {
+    var q = this.value.trim().toLowerCase();
+    var totalVisible = 0;
+
+    // Only search in currently active cards
+    var activeCards = document.querySelectorAll('.section.active .card');
+
+    activeCards.forEach(function(card) {
+      var name = (card.querySelector('.card-name') || {}).textContent || '';
+      var desc = (card.querySelector('.card-desc') || {}).textContent || '';
+      var tag = (card.querySelector('.card-tag') || {}).textContent || '';
+      var text = (name + ' ' + desc + ' ' + tag).toLowerCase();
+      if (q === '' || text.indexOf(q) !== -1) {
+        card.classList.remove('hidden');
+        totalVisible++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    // Hide empty subsections within active section
+    document.querySelectorAll('.subsection.active').forEach(function(sub) {
+      var visible = sub.querySelectorAll('.card:not(.hidden)').length;
+      sub.style.display = (q && visible === 0) ? 'none' : '';
+    });
+
+    noResults.classList.toggle('show', q !== '' && totalVisible === 0);
+  });
+
+  // ---- Content scroll: back to top ----
+  contentEl.addEventListener('scroll', function() {
+    if (contentEl.scrollTop > 200) backTop.classList.add('show');
+    else backTop.classList.remove('show');
+  });
+
+  backTop.addEventListener('click', function() {
+    contentEl.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ---- Mobile sidebar ----
+  var menuToggle = document.getElementById('menuToggle');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  if (menuToggle) {
+    menuToggle.addEventListener('click', function() {
+      sidebar.classList.add('show');
+      overlay.classList.add('show');
+    });
+  }
+  if (overlay) {
+    overlay.addEventListener('click', function() {
+      sidebar.classList.remove('show');
+      overlay.classList.remove('show');
+    });
+  }
+
+  // ---- Init: show first section ----
+  navigate('常用推荐', 'section');
+})();
+</script>
+
+</body>
+</html>
